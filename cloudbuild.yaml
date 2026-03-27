@@ -1,0 +1,23 @@
+steps:
+# Step 1: Build Docker Image
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t',
+    'asia-south2-docker.pkg.dev/my-project-new-490705/my-repo/app',
+    '.'
+  ]
+
+# Step 2: Push Image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'push',
+    'asia-south2-docker.pkg.dev/my-project-new-490705/myrepo/app'
+  ]
+
+# Step 3: Deploy to GKE
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['apply', '-f', 'k8s.yaml']
+  env:
+  - 'CLOUDSDK_COMPUTE_REGION=asia-south2'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-test'
